@@ -149,6 +149,11 @@ Beware though, this will cause the script to re-check every download as it does 
   
   # With arguments
   $> docker-compose run --rm redbetter -U http://redacted.ch/torrents.php?id=1000\&torrentid=1000000
+
+  # Transcode and make torrents
+    # arguments:    input_dir   basename    output_dir    output_format
+  $> python transcode.py "/data/artist album[2021][FLAC]" "artist album[2021]" "/output" '320'
+
 ~~~
 
 ## Bugs and feature requests
