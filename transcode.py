@@ -445,15 +445,15 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('input_dir')
-    parser.add_argument('basename')
     parser.add_argument('output_dir')
+    parser.add_argument('dir_name')
     parser.add_argument('output_format', choices=encoders.keys())
     args = parser.parse_args()
-    print(args)
-
-    transcode_dir = transcode_release(args.input_dir, args.output_dir, args.basename, args.output_format)
+    print "Start transcoding"
+    transcode_dir = transcode_release(args.input_dir, args.output_dir, args.dir_name, args.output_format)
     if not transcode_dir:
         print "Skipping - some file(s) in this release were incorrectly marked as 24bit."
     else:
         print "make torrent"
         new_torrent = make_torrent(transcode_dir, '/torrents', 'tracker', 'passkey', '18')
+    print "done!"

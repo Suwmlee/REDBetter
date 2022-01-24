@@ -2,15 +2,9 @@
 
 ## Introduction
 
-This repository contains my personal fork of the REDBetter script, originally developed for What.CD by zacharydenton and updated by Mechazawa and iw00t.
+This repository contains my personal fork of the REDBetter script, originally developed for What.CD by zacharydenton and updated by Mechazawa, iw00t and gotson.
 
-It integrates the following unmerged PRs on iw00t's repository:
-- https://github.com/iw00t/REDBetter/pull/14
-- https://github.com/iw00t/REDBetter/pull/16
-- https://github.com/iw00t/REDBetter/pull/17
-- https://github.com/iw00t/REDBetter/pull/19
-
-It's available on DockerHub: https://hub.docker.com/r/gotson/redbetter
+Some fixes and It's available on DockerHub: https://hub.docker.com/r/suwmlee/musicbetter
 
 ---
 REDBetter is a script which searches your torrent download directory for any FLAC torrents which do not have transcodes, then automatically transcodes and uploads the torrents to redacted.ch.
@@ -127,6 +121,12 @@ REDBetter caches the results of your transcodes, and will skip any transcodes it
 
 Beware though, this will cause the script to re-check every download as it does on the first run.
 
+Only transcode and make torrents, don't need any acount info
+
+    # arguments:    input_dir    output_dir     dir_name    output_format
+    $> python transcode.py "/data/artist album[2021][FLAC]" "/output" "artist album[2021]" '320'
+    # torrent file will be named "artist album[2021][320]" in torrents folder
+
 ### Docker example
 
 ~~~
@@ -149,10 +149,6 @@ Beware though, this will cause the script to re-check every download as it does 
   
   # With arguments
   $> docker-compose run --rm redbetter -U http://redacted.ch/torrents.php?id=1000\&torrentid=1000000
-
-  # Transcode and make torrents
-    # arguments:    input_dir   basename    output_dir    output_format
-  $> python transcode.py "/data/artist album[2021][FLAC]" "artist album[2021]" "/output" '320'
 
 ~~~
 
