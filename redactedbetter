@@ -23,7 +23,7 @@ def create_description(torrent, flac_dir, format, permalink):
             'input.flac', 'output' + transcode.encoders[format]['ext'])
 
     description = [
-        'Transcode of [url=%s]%s[/url]' % (permalink, permalink),
+        '',
         ]
     return description
 
@@ -140,6 +140,7 @@ def main():
         candidates = [(int(query['id']), int(query['torrentid'])) for query in\
                 [dict(urlparse.parse_qsl(urlparse.urlparse(url).query)) for url in args.release_urls]]
     else:
+        print 'Find all your snatched flac torrents'
         candidates = api.snatched(skip=seen, media=supported_media)
 
     for groupid, torrentid in candidates:

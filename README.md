@@ -121,7 +121,7 @@ REDBetter caches the results of your transcodes, and will skip any transcodes it
 
 Beware though, this will cause the script to re-check every download as it does on the first run.
 
-Only transcode and make torrents, don't need any acount info. Please double check your source is correct
+Transcoding and making torrents only, don't need any account info. Please double check your sources!
 
     # arguments:    input_dir    output_dir     dir_name    output_format
     $> python transcode.py "/data/artist album[2021][FLAC]" "/output" "artist album[2021]" '320'
@@ -150,8 +150,8 @@ Only transcode and make torrents, don't need any acount info. Please double chec
   # With arguments
   $> docker-compose run --rm redbetter -U http://redacted.ch/torrents.php?id=1000\&torrentid=1000000
 
-  # Only transcode and make torrents, don't need any acount info
-  # Please double check your source is correct
+  # Transcoding and making torrents only, don't need any account info
+  # Please double check your sources
   # transcode.py arguments:    input_dir    output_dir     dir_name    output_format
   $> docker-compose run --rm redbetter python transcode.py "/data/artist album[2021][FLAC]" "/output" "artist album[2021]" 'V0'
 
