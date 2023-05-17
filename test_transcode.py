@@ -26,7 +26,7 @@ class TestGetBasename(unittest.TestCase):
             'media': 'CD',
             'remaster': 'remaster'
         }
-        self.assertEqual(transcode.get_basename(b), 'artist - album (remaster)[2000][CD]')
+        self.assertEqual(transcode.get_basename(b), 'artist - album (remaster)(2000)[CD]')
 
     def test_no_remaster(self):
         b = {
@@ -35,7 +35,7 @@ class TestGetBasename(unittest.TestCase):
             'year': '2000',
             'media': 'CD',
         }
-        self.assertEqual(transcode.get_basename(b), 'artist - album[2000][CD]')
+        self.assertEqual(transcode.get_basename(b), 'artist - album(2000)[CD]')
 
     def test_no_remaster_no_media(self):
         b = {
@@ -43,7 +43,7 @@ class TestGetBasename(unittest.TestCase):
             'album': 'album',
             'year': '2000',
         }
-        self.assertEqual(transcode.get_basename(b), 'artist - album[2000]')
+        self.assertEqual(transcode.get_basename(b), 'artist - album(2000)')
 
     def test_no_remaster_no_media_no_year(self):
         b = {
@@ -84,7 +84,7 @@ class TestGetTranscodeDir(unittest.TestCase):
             'year': '2000',
             'media': 'CD',
         }
-        expected = 'VA - Album[2000][CD][V0]'
+        expected = 'VA - Album(2000)[CD][V0]'
         actual = transcode.get_transcode_dir(dir, '', 'ignored', 'V0', True, b)
         self.assertEqual(expected, actual)
         shutil.rmtree(dir)
