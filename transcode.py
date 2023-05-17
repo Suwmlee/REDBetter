@@ -270,7 +270,7 @@ def get_basename(base_attrs):
     if "remaster" in base_attrs and len(base_attrs['remaster']) >= 1:
         basename += " (" + base_attrs['remaster'] + ")"
     if 'year' in base_attrs:
-        basename += "[" + base_attrs['year'] + "]"
+        basename += "(" + base_attrs['year'] + ")"
     if 'media' in base_attrs:
         basename += "[" + base_attrs['media'] + "]"
     return basename
