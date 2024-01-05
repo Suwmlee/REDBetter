@@ -9,6 +9,8 @@ import shutil
 import signal
 import subprocess
 import sys
+from PIL import Image
+from PIL import ImageFile
 
 import mutagen.flac
 
@@ -333,7 +335,7 @@ def get_transcode_dir(flac_dir, output_dir, basename, output_format, no_prompt, 
     return os.path.join(output_dir, newbasename)
 
 
-def transcode_release(flac_dir, output_dir, basename, output_format, max_threads=None, no_prompt=False, base_attrs=None):
+def transcode_release(flac_dir, output_dir, filename, output_format, max_threads=None, no_prompt=False, base_attrs=None, resize_image=False):
     # Transcode a FLAC release into another format.
     flac_dir = os.path.abspath(flac_dir)
     output_dir = os.path.abspath(output_dir)
@@ -352,7 +354,7 @@ def transcode_release(flac_dir, output_dir, basename, output_format, max_threads
     # transcode_dir is a new directory created exclusively for this
     # transcode. Do not change this assumption without considering the
     # consequences!
-    transcode_dir = get_transcode_dir(flac_dir, output_dir, basename, output_format, no_prompt, base_attrs=base_attrs)
+    transcode_dir = get_transcode_dir(flac_dir, output_dir, filename, output_format, no_prompt, base_attrs=base_attrs)
     
     if not os.path.exists(transcode_dir):
         os.makedirs(transcode_dir)
@@ -400,11 +402,17 @@ def transcode_release(flac_dir, output_dir, basename, output_format, max_threads
         # copy other files
         allowed_extensions = ['.cue', '.gif', '.jpeg', '.jpg', '.log', '.md5', '.nfo', '.pdf', '.png', '.sfv', '.txt']
         allowed_files = locate(flac_dir, ext_matcher(*allowed_extensions))
-        for filename in allowed_files:
-            new_dir = os.path.dirname(filename).replace(flac_dir, transcode_dir)
+        for filepath in allowed_files:
+            new_dir = os.path.dirname(filepath).replace(flac_dir, transcode_dir)
             if not os.path.exists(new_dir):
                 os.makedirs(new_dir)
-            shutil.copy(filename, new_dir)
+            shutil.copy(filepath, new_dir)
+            if resize_image:
+                filename = os.path.basename(filepath)
+                if '.jpeg' in filename.lower() or '.jpg' in filename.lower() or '.png' in filename.lower():
+                    print('fix image :{} {}'.format(filename, new_dir))
+                    resize_path = os.path.join(new_dir, filename)
+                    compress_image(resize_path)
 
         return transcode_dir
 
@@ -415,6 +423,29 @@ def transcode_release(flac_dir, output_dir, basename, output_format, max_threads
         # not contain anything other than the transcoded files!
         shutil.rmtree(transcode_dir)
         raise
+
+ 
+def compress_image(outfile, mb=500, quality=85, k=0.9):
+    o_size = os.path.getsize(outfile) // 1024
+    print("check image:{}".format(outfile))
+    print('before_size:{} after_size:{}'.format(o_size, mb))
+    if o_size <= mb:
+        return outfile
+    
+    ImageFile.LOAD_TRUNCATED_IMAGES = True
+    
+    while o_size > mb:
+        im = Image.open(outfile)
+        x, y = im.size
+        out = im.resize((int(x*k), int(y*k)), Image.ANTIALIAS)
+        try:
+            out.save(outfile, quality=quality)
+        except Exception as e:
+            print(e)
+            break
+        o_size = os.path.getsize(outfile) // 1024
+    return outfile
+
 
 def make_torrent(input_dir, output_dir, tracker, passkey, piece_length):
     torrent = os.path.join(output_dir, os.path.basename(input_dir)) + ".torrent"
@@ -448,9 +479,10 @@ if __name__ == "__main__":
     parser.add_argument('output_dir')
     parser.add_argument('dir_name')
     parser.add_argument('output_format', choices=encoders.keys())
+    parser.add_argument('resize_tag')
     args = parser.parse_args()
     print "Start transcoding"
-    transcode_dir = transcode_release(args.input_dir, args.output_dir, args.dir_name, args.output_format)
+    transcode_dir = transcode_release(args.input_dir, args.output_dir, args.dir_name, args.output_format, resize_image=args.resize_tag)
     if not transcode_dir:
         print "Skipping - some file(s) in this release were incorrectly marked as 24bit."
     else:
