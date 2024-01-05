@@ -10,6 +10,7 @@ WORKDIR /app
 ADD requirements.txt /app
 
 RUN set -x \
+  && pip install --upgrade pip setuptools wheel \
   && pip install -r requirements.txt
 
 ADD . /app
