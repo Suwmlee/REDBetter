@@ -152,8 +152,9 @@ Transcoding and making torrents only, don't need any account info. Please double
 
   # Transcoding and making torrents only, don't need any account info
   # Please double check your sources
+  # will auto compress image below 512k
   # transcode.py arguments:    input_dir    output_dir     dir_name    output_format
-  $> docker-compose run --rm redbetter python transcode.py "/data/artist album[2021][FLAC]" "/output" "artist album[2021]" 'V0'
+  $> docker-compose run --rm redbetter python transcode.py "/data/artist album[2021][FLAC]" "artist album[2021]" 'V0'
 
 ~~~
 
