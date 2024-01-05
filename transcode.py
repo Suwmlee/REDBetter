@@ -476,13 +476,11 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('input_dir')
-    parser.add_argument('output_dir')
     parser.add_argument('dir_name')
     parser.add_argument('output_format', choices=encoders.keys())
-    parser.add_argument('resize_tag')
     args = parser.parse_args()
     print "Start transcoding"
-    transcode_dir = transcode_release(args.input_dir, args.output_dir, args.dir_name, args.output_format, resize_image=args.resize_tag)
+    transcode_dir = transcode_release(args.input_dir, "/output", args.dir_name, args.output_format, resize_image=True)
     if not transcode_dir:
         print "Skipping - some file(s) in this release were incorrectly marked as 24bit."
     else:
