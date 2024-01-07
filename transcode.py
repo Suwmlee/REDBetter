@@ -425,16 +425,16 @@ def transcode_release(flac_dir, output_dir, filename, output_format, max_threads
         raise
 
  
-def compress_image(outfile, mb=500, quality=85, k=0.9):
+def compress_image(outfile, kb=2048, quality=85, k=0.9):
     o_size = os.path.getsize(outfile) // 1024
     print("check image:{}".format(outfile))
-    print('before_size:{} after_size:{}'.format(o_size, mb))
-    if o_size <= mb:
+    print('before_size:{} after_size:{}'.format(o_size, kb))
+    if o_size <= kb:
         return outfile
     
     ImageFile.LOAD_TRUNCATED_IMAGES = True
     
-    while o_size > mb:
+    while o_size > kb:
         im = Image.open(outfile)
         x, y = im.size
         out = im.resize((int(x*k), int(y*k)), Image.ANTIALIAS)
